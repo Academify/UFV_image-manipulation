@@ -6,6 +6,7 @@ using namespace std;
 
 const int MAXALTURA  = 500;
 const int MAXLARGURA = 500;
+unsigned char novaImagem[MAXALTURA][MAXLARGURA];
 unsigned char imagem[MAXALTURA][MAXLARGURA];	//a imagem propriamente dita
 char tipo[4];  									//tipo da imagem
 int largura, altura;							//dimensoes da imagem
@@ -16,7 +17,14 @@ int largura, altura;							//dimensoes da imagem
 	void menu();
 	int verificaResposta(int resp);
 	int leituraImagem(string nome);
-	unsigned char clarearPB(unsigned char imagem);
+	void clarearPB();
+	void clarearRGB();
+	void escurecerPB();
+	void escurecerRGB();
+	void negativoPB();
+	void espelhoPB();
+	void sobelPB();
+	int salvarPB();
 
 	// ------------------------------------------------------------------------------
 
@@ -43,55 +51,72 @@ void menu(){
     cout << "3 - Negativo da imagem" << endl;
     cout << "4 - Espelho da imagem" << endl;
     cout << "5 - Filtro de sobel" << endl;
+    cout << "6 - Salvar imagem" << endl;
     cout << "0 - Sair"<< endl;
 }
 
 int verificaResposta(int resp){
     switch (resp){
     case 1:
-		if (tipo == "P2"){
-			//clarearPB(imagem, altura, largura);
+		if (strcmp(tipo,"P2")==0){
+			clarearPB();
 		}else{
-			//clarearRGB(imagem, altura, largura);
+			//clarearRGB();
 		}
 		cout << "Efeito 1 aplicado!" << endl;
         break;
     case 2:
-		if (tipo == "P2"){
-			//escurecerPB(imagem, altura, largura);
+		if (strcmp(tipo,"P2")==0){
+			escurecerPB();
 		}else{
-			//escurecerRGB(imagem, altura, largura);
+			//escurecerRGB();
 		}
         cout << "Efeito 2 aplicado!" << endl;
         break;
     case 3:
-		if (tipo == "P2"){
-			//negativoPB(imagem, altura, largura);
+		if (strcmp(tipo,"P2")==0){
+			negativoPB();
 		}else{
-			//negativoRGB(imagem, altura, largura);
+			//negativoRGB();
 		}
         cout << "Efeito 3 aplicado!" << endl;
         break;
     case 4:
-        if (tipo == "P2"){
-			//espelhoPB(imagem, altura, largura);
+        if (strcmp(tipo,"P2")==0){
+			espelhoPB();
 		}else{
-			//espelhoRGB(imagem, altura, largura);
+			//espelhoRGB();
 		}
         cout << "Efeito 4 aplicado!" << endl;
         break;
     case 5:
-        if (tipo == "P2"){
-			//sobelPB(imagem, altura, largura);
+        if (strcmp(tipo,"P2")==0){
+			sobelPB();
 		}else{
-			//sobelRGB(imagem, altura, largura);
+			//sobelRGB();
 		}
         cout << "Efeito 5 aplicado!" << endl;
         break;
+	case 6:
+        if (strcmp(tipo,"P2")==0){
+			salvarPB();
+		}else{
+			//salvarRGB();
+		}
+        cout << "Imagem salva!" << endl;
+        break;	
     case 0:
-        return 0;
+		int resposta;
+		cout << "Deseja realmente sair?"<< endl;
+		cout << "1 - SIM "<< endl;
+		cout << "2 - NAO"<< endl;
+		cin >> resposta;
+		if (resposta == 1){
+			return 0;
+		}
         break;
     default:
+		return 0;
         break;
     }
 }
@@ -173,4 +198,153 @@ int leituraImagem(string nome){
 	arqentrada.close();
     return 8;
     //*** FIM DA LEITURA DA IMAGEM ***//
+}
+
+void clarearPB(){
+	int valor, fator;
+	cout << "Informe o fator de clareamento da imagem: " << endl;
+	cin >> fator;
+	for(int i=0;i<altura;i++){
+		for(int j=0;j<largura;j++) {
+			valor = (int)imagem[i][j];				//pega o valor do pixel
+			valor += fator;							//escurece o pixel
+			if (valor<0){							//se der negativo
+				valor = 0;							//  deixa preto
+			}								
+			imagem[i][j] = (unsigned char)valor;	//modifica o pixel
+		}
+	}	
+}
+void escurecerPB(){
+	int valor, fator;
+	cout << "Informe o fator de escurecimento da imagem: " << endl;
+	cin >> fator;
+	for(int i=0;i<altura;i++){
+		for(int j=0;j<largura;j++) {
+			valor = (int)imagem[i][j];				//pega o valor do pixel
+			valor -= fator;							//escurece o pixel
+			if (valor<0){							//se der negativo
+				valor = 0;							//  deixa preto
+			}								
+			imagem[i][j] = (unsigned char)valor;	//modifica o pixel
+		}
+	}	
+}
+void negativoPB(){
+	int valor;
+	for(int i=0;i<altura;i++) {
+		for(int j=0;j<largura;j++) {
+			valor = (int)imagem[i][j];			
+			valor = 255 - valor;
+			imagem[i][j] = (unsigned char)valor;
+		}
+	}
+}
+void espelhoPB(){
+	int valor;
+	for(int i=0;i<altura;i++) {
+		for(int j=0;j<largura/2;j++) {
+			valor = (int)imagem[i][j];			
+			int aux = (int) imagem[i][largura-1-j];
+			imagem[i][largura-1-j]=(unsigned char)valor;
+			imagem[i][j] = (unsigned char) aux;
+		}
+	}
+}
+void sobelPB(){
+	int matriz[3][3] = {1,2,1,0,0,0,-1,-2,-1};
+	int soma = 0;
+	for (int i = 0; i < altura; i++) {
+		for (int j = 0; j < largura; j++){
+			if (i!=0){ //não está na primeira linha
+				soma+= ((int) imagem[i-1][j])*matriz[0][1];
+				if(j!=0)  //não está na primeira coluna 
+					soma+= ((int) imagem[i-1][j-1])*matriz[0][0];					
+				if(j!=largura-1)  //não está na última coluna
+					soma+= ((int) imagem[i-1][j+1])*matriz[0][2];
+			}
+			if(i!=altura-1){ //não está na última linha
+				soma+= ((int) imagem[i+1][j])*matriz[2][1];
+				if(j!=0)  //não está na primeira coluna 
+					soma+= ((int) imagem[i+1][j-1])*matriz[2][0];					
+				if(j!=largura-1)  //não está na última coluna
+					soma+= ((int) imagem[i+1][j+1])*matriz[2][2];
+			}
+			soma+= ((int) imagem[i][j])*matriz[1][1];
+			if(j!=0)  //não está na primeira coluna 
+				soma+= ((int) imagem[i][j-1])*matriz[1][0];					
+			if(j!=largura-1)  //não está na última coluna
+				soma+= ((int) imagem[i][j+1])*matriz[1][2];
+				
+			if (soma>255) soma = 255;
+			if (soma < 0) soma = 0;
+			novaImagem[i][j] = (unsigned char) soma;
+			soma = 0;
+		}
+	}
+	int matriz2[3][3] = {1,0,-1,2,0,-2,1,0,-1};
+	for (int i = 0; i < altura; i++) {
+		for (int j = 0; j < largura; j++){
+			if (i!=0){ //não está na primeira linha
+				soma+= ((int) imagem[i-1][j])*matriz2[0][1];
+				if(j!=0)  //não está na primeira coluna 
+					soma+= ((int) imagem[i-1][j-1])*matriz2[0][0];					
+				if(j!=largura-1)  //não está na última coluna
+					soma+= ((int) imagem[i-1][j+1])*matriz2[0][2];
+			}
+			if(i!=altura-1){ //não está na última linha
+				soma+= ((int) imagem[i+1][j])*matriz2[2][1];
+				if(j!=0)  //não está na primeira coluna 
+					soma+= ((int) imagem[i+1][j-1])*matriz2[2][0];					
+				if(j!=largura-1)  //não está na última coluna
+					soma+= ((int) imagem[i+1][j+1])*matriz2[2][2];
+			}
+			soma+= ((int) imagem[i][j])*matriz2[1][1];
+			if(j!=0)  //não está na primeira coluna 
+				soma+= ((int) imagem[i][j-1])*matriz2[1][0];					
+			if(j!=largura-1)  //não está na última coluna
+				soma+= ((int) imagem[i][j+1])*matriz2[1][2];
+				
+			if (soma>255) soma = 255;
+			if (soma < 0) soma = 0;
+			int media = ((int)novaImagem[i][j]+soma)/2;
+			if (media>255) media = 255;
+			if (media< 0) media = 0;
+			novaImagem[i][j] = (unsigned char) media;
+			soma = 0;
+		}
+	}
+}
+int salvarPB(){
+
+	ofstream arqsaida;  							//arquivo que contera a imagem gerada
+	char comentario[200], c;						//auxiliares
+	int i, j, valor;
+    string extensao = ".pnm";
+
+	//*** GRAVACAO DA IMAGEM ***//
+	//inicialmente nao sera necessario entender nem mudar nada nesta parte
+
+	//*** Grava a nova imagem ***//
+	string novoNome;
+	cout << "Informe o nome da imagem a ser salva: " << endl;
+	cin >> novoNome;
+	arqsaida.open(novoNome + extensao,ios::out);	//Abre arquivo para escrita
+	if (!arqsaida) {
+		cout << "Nao consegui criar " + novoNome + extensao + "\n";
+		return 0;
+	}
+
+	arqsaida << tipo << endl;						//tipo
+	arqsaida << "# INF110\n";						//comentario
+	arqsaida << largura << " " << altura << endl;	//dimensoes
+	arqsaida << 255 << endl;						//maior valor
+	for(int i=0;i<altura;i++)
+		for(int j=0;j<largura;j++)
+			arqsaida << (int)novaImagem[i][j] << endl;	//pixels
+
+	arqsaida.close();		//fecha o arquivo
+	//***************************//
+
+	//*** FIM DA GRAVACAO DA IMAGEM ***//
 }
