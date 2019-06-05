@@ -17,7 +17,7 @@ int largura, altura;							//dimensoes da imagem
 	void menu();
 	int verificaResposta(int resp);
 	int leituraImagem(string nome);
-	void clarearPB();
+	void clarearPB(unsigned char[MAXALTURA][MAXLARGURA], int altura, int largura);
 	void clarearRGB();
 	void escurecerPB();
 	void escurecerRGB();
@@ -59,7 +59,7 @@ int verificaResposta(int resp){
     switch (resp){
     case 1:
 		if (strcmp(tipo,"P2")==0){
-			clarearPB();
+			clarearPB(imagem, altura, largura);
 		}else{
 			//clarearRGB();
 		}
@@ -200,7 +200,7 @@ int leituraImagem(string nome){
     //*** FIM DA LEITURA DA IMAGEM ***//
 }
 
-void clarearPB(){
+void clarearPB(unsigned char [MAXALTURA][MAXLARGURA], int altura, int largura){
 	int valor, fator;
 	cout << "Informe o fator de clareamento da imagem: " << endl;
 	cin >> fator;
@@ -329,7 +329,7 @@ int salvarPB(){
 	string novoNome;
 	cout << "Informe o nome da imagem a ser salva: " << endl;
 	cin >> novoNome;
-	arqsaida.open(novoNome + extensao,ios::out);	//Abre arquivo para escrita
+	arqsaida.open(novoNome + extensao, ios::out);	//Abre arquivo para escrita
 	if (!arqsaida) {
 		cout << "Nao consegui criar " + novoNome + extensao + "\n";
 		return 0;
@@ -341,7 +341,7 @@ int salvarPB(){
 	arqsaida << 255 << endl;						//maior valor
 	for(int i=0;i<altura;i++)
 		for(int j=0;j<largura;j++)
-			arqsaida << (int)novaImagem[i][j] << endl;	//pixels
+			arqsaida << (int)imagem[i][j] << endl;	//pixels
 
 	arqsaida.close();		//fecha o arquivo
 	//***************************//
