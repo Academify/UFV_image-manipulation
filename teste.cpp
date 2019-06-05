@@ -4,20 +4,24 @@
 
 using namespace std;
 
-const int MAXALTURA  = 500;
-const int MAXLARGURA = 500;
-unsigned char novaImagem[MAXALTURA][MAXLARGURA];
-unsigned char imagem[MAXALTURA][MAXLARGURA];	//a imagem propriamente dita
-char tipo[4];  									//tipo da imagem
-int largura, altura;							//dimensoes da imagem
+// - Variáveis Globais --------------------------------------------------------------
 
+	const int MAXALTURA  = 500;
+	const int MAXLARGURA = 500;
+	unsigned char novaImagem[MAXALTURA][MAXLARGURA];
+	unsigned char imagemC[MAXALTURA][MAXLARGURA][3];
+	unsigned char imagem[MAXALTURA][MAXLARGURA];	//a imagem propriamente dita
+	char tipo[4];  									//tipo da imagem
+	int largura, altura;							//dimensoes da imagem
 
-	// - Declaração de funções ------------------------------------------------------
+// ----------------------------------------------------------------------------------
+
+// - Declaração de funções ------------------------------------------------------
 
 	void menu();
 	int verificaResposta(int resp);
 	int leituraImagem(string nome);
-	void clarearPB(unsigned char[MAXALTURA][MAXLARGURA], int altura, int largura);
+	void clarearPB();
 	void clarearRGB();
 	void escurecerPB();
 	void escurecerRGB();
@@ -26,7 +30,8 @@ int largura, altura;							//dimensoes da imagem
 	void sobelPB();
 	int salvarPB();
 
-	// ------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------
+
 
 int main(){
 
@@ -34,6 +39,7 @@ int main(){
     string nome;
     cout << "Informe o nome da imagem a ser lida: " << endl;
     cin >> nome;
+	cout << endl;
     resp = leituraImagem(nome);
     while (resp!= 0){
         menu();
@@ -53,17 +59,19 @@ void menu(){
     cout << "5 - Filtro de sobel" << endl;
     cout << "6 - Salvar imagem" << endl;
     cout << "0 - Sair"<< endl;
+	cout << endl;
 }
 
 int verificaResposta(int resp){
     switch (resp){
     case 1:
 		if (strcmp(tipo,"P2")==0){
-			clarearPB(imagem, altura, largura);
+			clarearPB();
 		}else{
 			//clarearRGB();
 		}
 		cout << "Efeito 1 aplicado!" << endl;
+		cout << endl;
         break;
     case 2:
 		if (strcmp(tipo,"P2")==0){
@@ -72,6 +80,7 @@ int verificaResposta(int resp){
 			//escurecerRGB();
 		}
         cout << "Efeito 2 aplicado!" << endl;
+		cout << endl;
         break;
     case 3:
 		if (strcmp(tipo,"P2")==0){
@@ -80,6 +89,7 @@ int verificaResposta(int resp){
 			//negativoRGB();
 		}
         cout << "Efeito 3 aplicado!" << endl;
+		cout << endl;
         break;
     case 4:
         if (strcmp(tipo,"P2")==0){
@@ -88,6 +98,7 @@ int verificaResposta(int resp){
 			//espelhoRGB();
 		}
         cout << "Efeito 4 aplicado!" << endl;
+		cout << endl;
         break;
     case 5:
         if (strcmp(tipo,"P2")==0){
@@ -96,6 +107,7 @@ int verificaResposta(int resp){
 			//sobelRGB();
 		}
         cout << "Efeito 5 aplicado!" << endl;
+		cout << endl;
         break;
 	case 6:
         if (strcmp(tipo,"P2")==0){
@@ -104,13 +116,18 @@ int verificaResposta(int resp){
 			//salvarRGB();
 		}
         cout << "Imagem salva!" << endl;
+		cout << endl;
         break;	
     case 0:
 		int resposta;
+		cout << endl;
 		cout << "Deseja realmente sair?"<< endl;
+		cout << endl;
 		cout << "1 - SIM "<< endl;
 		cout << "2 - NAO"<< endl;
+		cout << endl;	
 		cin >> resposta;
+		cout << endl;
 		if (resposta == 1){
 			return 0;
 		}
@@ -147,7 +164,9 @@ int leituraImagem(string nome){
 	arqentrada.get();	//Le e descarta o \n do final da 1a. linha
 
 	if (strcmp(tipo,"P2")==0) {
+		cout << endl;
 		cout << "Imagem em tons de cinza\n"; // Redirecionar para o menu de preto e branco;
+		cout << endl;
 	}
 	else if (strcmp(tipo,"P3")==0) {
 		cout << "Imagem colorida\n";// Redirecionar para o menu de colorida
@@ -169,7 +188,9 @@ int leituraImagem(string nome){
 							//nao era comentario, era o primeiro digito da largura
 
 	arqentrada >> largura >> altura;	//Le o numero de pixels da horizontal e vertical
+	cout << endl;
 	cout << "Tamanho: " << largura << " x " << altura << endl;
+	cout << endl;
 	if (largura>MAXLARGURA) {
 		cout << "Desculpe, mas ainda nao trabalho com imagens com mais de " << MAXLARGURA << " pixels de largura.\n";
 		arqentrada.close();
@@ -202,8 +223,11 @@ int leituraImagem(string nome){
 
 void clarearPB(){
 	int valor, fator;
+	cout << endl;
 	cout << "Informe o fator de clareamento da imagem: " << endl;
+	cout << endl;
 	cin >> fator;
+	cout << endl;
 	for(int i=0;i<altura;i++){
 		for(int j=0;j<largura;j++) {
 			valor = (int)imagem[i][j];				//pega o valor do pixel
@@ -217,8 +241,11 @@ void clarearPB(){
 }
 void escurecerPB(){
 	int valor, fator;
+	cout << endl;
 	cout << "Informe o fator de escurecimento da imagem: " << endl;
+	cout << endl;
 	cin >> fator;
+	cout << endl;
 	for(int i=0;i<altura;i++){
 		for(int j=0;j<largura;j++) {
 			valor = (int)imagem[i][j];				//pega o valor do pixel
@@ -256,26 +283,15 @@ void sobelPB(){
 	int soma = 0;
 	for (int i = 0; i < altura; i++) {
 		for (int j = 0; j < largura; j++){
-			if (i!=0){ //não está na primeira linha
-				soma+= ((int) imagem[i-1][j])*matriz[0][1];
-				if(j!=0)  //não está na primeira coluna 
-					soma+= ((int) imagem[i-1][j-1])*matriz[0][0];					
-				if(j!=largura-1)  //não está na última coluna
-					soma+= ((int) imagem[i-1][j+1])*matriz[0][2];
-			}
-			if(i!=altura-1){ //não está na última linha
-				soma+= ((int) imagem[i+1][j])*matriz[2][1];
-				if(j!=0)  //não está na primeira coluna 
-					soma+= ((int) imagem[i+1][j-1])*matriz[2][0];					
-				if(j!=largura-1)  //não está na última coluna
-					soma+= ((int) imagem[i+1][j+1])*matriz[2][2];
-			}
-			soma+= ((int) imagem[i][j])*matriz[1][1];
-			if(j!=0)  //não está na primeira coluna 
-				soma+= ((int) imagem[i][j-1])*matriz[1][0];					
-			if(j!=largura-1)  //não está na última coluna
-				soma+= ((int) imagem[i][j+1])*matriz[1][2];
-				
+			soma+= ((int) imagem[i-1][j])*matriz[0][1];
+			soma+= ((int) imagem[i-1][j-1])*matriz[0][0];					
+			soma+= ((int) imagem[i-1][j+1])*matriz[0][2];
+			soma+= ((int) imagem[i+1][j])*matriz[2][1];
+			soma+= ((int) imagem[i+1][j-1])*matriz[2][0];					
+			soma+= ((int) imagem[i+1][j+1])*matriz[2][2];
+			soma+= ((int) imagem[i][j])*matriz[1][1]; 
+			soma+= ((int) imagem[i][j-1])*matriz[1][0];					
+			soma+= ((int) imagem[i][j+1])*matriz[1][2];
 			if (soma>255) soma = 255;
 			if (soma < 0) soma = 0;
 			novaImagem[i][j] = (unsigned char) soma;
@@ -285,25 +301,15 @@ void sobelPB(){
 	int matriz2[3][3] = {1,0,-1,2,0,-2,1,0,-1};
 	for (int i = 0; i < altura; i++) {
 		for (int j = 0; j < largura; j++){
-			if (i!=0){ //não está na primeira linha
-				soma+= ((int) imagem[i-1][j])*matriz2[0][1];
-				if(j!=0)  //não está na primeira coluna 
-					soma+= ((int) imagem[i-1][j-1])*matriz2[0][0];					
-				if(j!=largura-1)  //não está na última coluna
-					soma+= ((int) imagem[i-1][j+1])*matriz2[0][2];
-			}
-			if(i!=altura-1){ //não está na última linha
-				soma+= ((int) imagem[i+1][j])*matriz2[2][1];
-				if(j!=0)  //não está na primeira coluna 
-					soma+= ((int) imagem[i+1][j-1])*matriz2[2][0];					
-				if(j!=largura-1)  //não está na última coluna
-					soma+= ((int) imagem[i+1][j+1])*matriz2[2][2];
-			}
+			soma+= ((int) imagem[i-1][j])*matriz2[0][1]; 
+			soma+= ((int) imagem[i-1][j-1])*matriz2[0][0];					
+			soma+= ((int) imagem[i-1][j+1])*matriz2[0][2];
+			soma+= ((int) imagem[i+1][j])*matriz2[2][1]; 
+			soma+= ((int) imagem[i+1][j-1])*matriz2[2][0];					
+			soma+= ((int) imagem[i+1][j+1])*matriz2[2][2];
 			soma+= ((int) imagem[i][j])*matriz2[1][1];
-			if(j!=0)  //não está na primeira coluna 
-				soma+= ((int) imagem[i][j-1])*matriz2[1][0];					
-			if(j!=largura-1)  //não está na última coluna
-				soma+= ((int) imagem[i][j+1])*matriz2[1][2];
+			soma+= ((int) imagem[i][j-1])*matriz2[1][0];					
+			soma+= ((int) imagem[i][j+1])*matriz2[1][2];
 				
 			if (soma>255) soma = 255;
 			if (soma < 0) soma = 0;
@@ -314,6 +320,9 @@ void sobelPB(){
 			soma = 0;
 		}
 	}
+	for (int i = 0; i < altura; i++) 
+		for (int j = 0; j < largura; j++)
+			imagem[i][j] = novaImagem[i][j];
 }
 int salvarPB(){
 
@@ -327,10 +336,13 @@ int salvarPB(){
 
 	//*** Grava a nova imagem ***//
 	string novoNome;
+	cout << endl;
 	cout << "Informe o nome da imagem a ser salva: " << endl;
+	cout << endl;
 	cin >> novoNome;
 	arqsaida.open(novoNome + extensao, ios::out);	//Abre arquivo para escrita
 	if (!arqsaida) {
+		cout << endl;
 		cout << "Nao consegui criar " + novoNome + extensao + "\n";
 		return 0;
 	}
@@ -348,3 +360,118 @@ int salvarPB(){
 
 	//*** FIM DA GRAVACAO DA IMAGEM ***//
 }
+
+void clarearRGB(){
+	int valor, fator;
+	cout << endl;
+	cout << "Informe o fator de clareamento da imagem: " << endl;
+	cout << endl;
+	cin >> fator;
+	cout << endl;
+	for(int i=0;i<altura;i++){
+		for(int j=0;j<largura;j++) {
+			for(int k=0; k<3; k++){
+				valor = (int)imagemC[i][j][k];				//pega o valor do pixel
+				valor += fator;							//escurece o pixel
+				if (valor<0){							//se der negativo
+				valor = 0;							//  deixa preto
+				}
+				imagemC[i][j][k] = (unsigned char)valor;	//modifica o pixel
+			}								
+		}
+	}	
+}
+void escurecerRGB(){
+	int valor, fator;
+	cout << endl;
+	cout << "Informe o fator de escurecimento da imagem: " << endl;
+	cout << endl;
+	cin >> fator;
+	cout << endl;
+	for(int i=0;i<altura;i++){
+		for(int j=0;j<largura;j++) {
+			for(int k=0; k<3; k++){
+				valor = (int)imagemC[i][j][k];				//pega o valor do pixel
+				valor -= fator;							//escurece o pixel
+				if (valor<0){							//se der negativo
+					valor = 0;							//  deixa preto
+				}
+				imagemC[i][j][k] = (unsigned char)valor;	//modifica o pixel
+			}								
+		}
+	}
+}
+void negativoRGB(){
+	int valor;
+	for(int i=0;i<altura;i++) {
+		for(int j=0;j<largura;j++) {
+			for(int k=0; k<3; k++){
+				valor = (int)imagemC[i][j][k];			
+				valor = 255 - valor;
+				imagemC[i][j][k]= (unsigned char)valor;
+			}
+		}
+	}
+}
+void espelhoRGB(){
+	int valor;
+	for(int i=0;i<altura;i++) {
+		for(int j=0;j<largura/2;j++) {
+			for(int k=0; k<3; k++){
+				valor = (int)imagemC[i][j][k];			
+				int aux = (int) imagemC[i][j][largura - 1 - k];
+				imagemC[i][j][largura-1-k]=(unsigned char)valor;
+				imagemC[i][j][k] = (unsigned char) aux;
+			}
+		}
+	}
+}
+ /* void sobelRGB(){
+	int matriz[3][3] = {1,2,1,0,0,0,-1,-2,-1};
+	int soma = 0;
+	for (int i = 0; i < altura; i++) {
+		for (int j = 0; j < largura; j++){
+			soma+= ((int) imagem[i-1][j])*matriz[0][1];
+			soma+= ((int) imagem[i-1][j-1])*matriz[0][0];					
+			soma+= ((int) imagem[i-1][j+1])*matriz[0][2];
+			soma+= ((int) imagem[i+1][j])*matriz[2][1];
+			soma+= ((int) imagem[i+1][j-1])*matriz[2][0];					
+			soma+= ((int) imagem[i+1][j+1])*matriz[2][2];
+			soma+= ((int) imagem[i][j])*matriz[1][1]; 
+			soma+= ((int) imagem[i][j-1])*matriz[1][0];					
+			soma+= ((int) imagem[i][j+1])*matriz[1][2];
+			if (soma>255) soma = 255;
+			if (soma < 0) soma = 0;
+			novaImagem[i][j] = (unsigned char) soma;
+			soma = 0;
+		}
+	}
+	int matriz2[3][3] = {1,0,-1,2,0,-2,1,0,-1};
+	for (int i = 0; i < altura; i++) {
+		for (int j = 0; j < largura; j++){
+			soma+= ((int) imagem[i-1][j])*matriz2[0][1]; 
+			soma+= ((int) imagem[i-1][j-1])*matriz2[0][0];					
+			soma+= ((int) imagem[i-1][j+1])*matriz2[0][2];
+			soma+= ((int) imagem[i+1][j])*matriz2[2][1]; 
+			soma+= ((int) imagem[i+1][j-1])*matriz2[2][0];					
+			soma+= ((int) imagem[i+1][j+1])*matriz2[2][2];
+			soma+= ((int) imagem[i][j])*matriz2[1][1];
+			soma+= ((int) imagem[i][j-1])*matriz2[1][0];					
+			soma+= ((int) imagem[i][j+1])*matriz2[1][2];
+				
+			if (soma>255) soma = 255;
+			if (soma < 0) soma = 0;
+			int media = ((int)novaImagem[i][j]+soma)/2;
+			if (media>255) media = 255;
+			if (media< 0) media = 0;
+			novaImagem[i][j] = (unsigned char) media;
+			soma = 0;
+		}
+	}
+	for (int i = 0; i < altura; i++) 
+		for (int j = 0; j < largura; j++)
+			imagem[i][j] = novaImagem[i][j];
+}
+int salvarRGB(){ */
+
+} */
