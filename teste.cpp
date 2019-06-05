@@ -6,11 +6,19 @@ using namespace std;
 
 const int MAXALTURA  = 500;
 const int MAXLARGURA = 500;
+unsigned char imagem[MAXALTURA][MAXLARGURA];	//a imagem propriamente dita
+char tipo[4];  									//tipo da imagem
+int largura, altura;							//dimensoes da imagem
 
-void menu();
-int verificaResposta(int resp);
-int leituraImagem(string nome);
 
+	// - Declaração de funções ------------------------------------------------------
+
+	void menu();
+	int verificaResposta(int resp);
+	int leituraImagem(string nome);
+	unsigned char clarearPB(unsigned char imagem);
+
+	// ------------------------------------------------------------------------------
 
 int main(){
 
@@ -41,23 +49,43 @@ void menu(){
 int verificaResposta(int resp){
     switch (resp){
     case 1:
-        //clarearPB(int imagem);
-        cout << "Efeito 1 aplicado!" << endl;
+		if (tipo == "P2"){
+			//clarearPB(imagem, altura, largura);
+		}else{
+			//clarearRGB(imagem, altura, largura);
+		}
+		cout << "Efeito 1 aplicado!" << endl;
         break;
     case 2:
-        //escurecerPB();
+		if (tipo == "P2"){
+			//escurecerPB(imagem, altura, largura);
+		}else{
+			//escurecerRGB(imagem, altura, largura);
+		}
         cout << "Efeito 2 aplicado!" << endl;
         break;
     case 3:
-        //negativoPB();
+		if (tipo == "P2"){
+			//negativoPB(imagem, altura, largura);
+		}else{
+			//negativoRGB(imagem, altura, largura);
+		}
         cout << "Efeito 3 aplicado!" << endl;
         break;
     case 4:
-        //espelhoPB();
+        if (tipo == "P2"){
+			//espelhoPB(imagem, altura, largura);
+		}else{
+			//espelhoRGB(imagem, altura, largura);
+		}
         cout << "Efeito 4 aplicado!" << endl;
         break;
     case 5:
-        //sobelPB();
+        if (tipo == "P2"){
+			//sobelPB(imagem, altura, largura);
+		}else{
+			//sobelRGB(imagem, altura, largura);
+		}
         cout << "Efeito 5 aplicado!" << endl;
         break;
     case 0:
@@ -71,9 +99,6 @@ int verificaResposta(int resp){
 int leituraImagem(string nome){
     // -------------------------------------------------------------------------------------
     
-    unsigned char imagem[MAXALTURA][MAXLARGURA];	//a imagem propriamente dita
-	int largura, altura;							//dimensoes da imagem
-	char tipo[4];									//tipo da imagem
 	ifstream arqentrada;							//arquivo que contem a imagem original
 	ofstream arqsaida;  							//arquivo que contera a imagem gerada
 	char comentario[200], c;						//auxiliares
