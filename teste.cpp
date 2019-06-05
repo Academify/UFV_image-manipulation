@@ -200,7 +200,7 @@ int leituraImagem(string nome){
     //*** FIM DA LEITURA DA IMAGEM ***//
 }
 
-void clarearPB(unsigned char [MAXALTURA][MAXLARGURA], int altura, int largura){
+void clarearPB(){
 	int valor, fator;
 	cout << "Informe o fator de clareamento da imagem: " << endl;
 	cin >> fator;
