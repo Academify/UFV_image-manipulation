@@ -16,7 +16,6 @@ int main() {
 	char comentario[200], c;						//auxiliares
 	int i, j, valor;								//auxiliares
 
-
 //*** LEITURA DA IMAGEM ***//
 //inicialmente nao sera necessario entender nem mudar nada nesta parte
 
