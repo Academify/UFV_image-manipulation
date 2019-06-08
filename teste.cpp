@@ -28,14 +28,14 @@ void escurecerRGB();
 void negativoPB();
 void espelhoPB();
 void sobelPB();
+void blurPB();
 int salvarPB();
 void espelhoRGB();
 void negativoRGB();
 int salvarRGB();
 // ------------------------------------------------------------------------------
 
-int main()
-{
+int main(){
 
 	int resp = 8;
 	string nome;
@@ -53,21 +53,21 @@ int main()
 	return 0;
 }
 
-void menu()
-{
+void menu(){
 	cout << "O que deseja fazer com a sua imagem?" << endl;
 	cout << "1 - Clarear imagem" << endl;
 	cout << "2 - Escurecer imagem" << endl;
 	cout << "3 - Negativo da imagem" << endl;
 	cout << "4 - Espelho da imagem" << endl;
 	cout << "5 - Filtro de sobel" << endl;
-	cout << "6 - Salvar imagem" << endl;
+	cout << "6 - Filtro Blur" << endl;
+	cout << "7 - Salvar imagem" << endl;
+	cout << "8 - Ler outra imagem" << endl;
 	cout << "0 - Sair" << endl;
 	cout << endl;
 }
 
-int verificaResposta(int resp)
-{
+int verificaResposta(int resp){
 	switch (resp)
 	{
 	case 1:
@@ -126,6 +126,14 @@ int verificaResposta(int resp)
 		cout << endl;
 		break;
 	case 6:
+		if (strcmp(tipo, "P2") == 0){
+			blurPB();
+		}else if(strcmp(tipo, "P3") == 0){
+			cout << "Esse efeito não está disponível para imagens coloridas!" << endl;
+			cout << endl;
+		}
+		break;
+	case 7:
 		if (strcmp(tipo, "P2") == 0)
 		{
 			salvarPB();
@@ -135,6 +143,9 @@ int verificaResposta(int resp)
 		}
 		cout << "Imagem salva!" << endl;
 		cout << endl;
+		break;
+	case 8:
+		main();
 		break;
 	case 0:
 		int resposta;
@@ -157,8 +168,7 @@ int verificaResposta(int resp)
 	}
 }
 
-int leituraImagem(string nome)
-{
+int leituraImagem(string nome){
 	// -------------------------------------------------------------------------------------
 
 	ifstream arqentrada;	 //arquivo que contem a imagem original
@@ -245,9 +255,8 @@ int leituraImagem(string nome)
 	return 8;
 	//*** FIM DA LEITURA DA IMAGEM ***//
 }
-
-void clarearPB()
-{
+//-----------------------------------------------------------------------------------
+void clarearPB(){
 	int valor, fator;
 	cout << endl;
 	cout << "Informe o fator de clareamento da imagem: " << endl;
@@ -268,8 +277,7 @@ void clarearPB()
 		}
 	}
 }
-void escurecerPB()
-{
+void escurecerPB(){
 	int valor, fator;
 	cout << endl;
 	cout << "Informe o fator de escurecimento da imagem: " << endl;
@@ -290,8 +298,7 @@ void escurecerPB()
 		}
 	}
 }
-void negativoPB()
-{
+void negativoPB(){
 	int valor;
 	for (int i = 0; i < altura; i++)
 	{
@@ -303,8 +310,7 @@ void negativoPB()
 		}
 	}
 }
-void espelhoPB()
-{
+void espelhoPB(){
 	int valor;
 	for (int i = 0; i < altura; i++)
 	{
@@ -317,8 +323,7 @@ void espelhoPB()
 		}
 	}
 }
-void sobelPB()
-{
+void sobelPB(){
 	int matriz[3][3] = {1, 2, 1, 0, 0, 0, -1, -2, -1};
 	int soma = 0;
 	for (int i = 0; i < altura; i++)
@@ -374,8 +379,27 @@ void sobelPB()
 		for (int j = 0; j < largura; j++)
 			imagem[i][j] = novaImagem[i][j];
 }
-int salvarPB()
-{
+void blurPB(){
+	int valor;
+	double media =0;
+	for (int i = 0; i < altura; i++){
+		for (int j = 0; j < largura; j++){
+			valor = (int)imagem[i][j];
+			media += imagem[i-1][j];
+			media += imagem[i-1][j-1];
+			media += imagem[i-1][j+1];
+			media += imagem[i][j];
+			media += imagem[i][j-1];
+			media += imagem[i][j+1];
+			media += imagem[i+1][j];
+			media += imagem[i+1][j-1];
+			media += imagem[i+1][j+1];
+			media = media/9;
+			imagem[i][j] = (unsigned char)media;
+		}
+	}
+}
+int salvarPB(){
 
 	ofstream arqsaida;		 //arquivo que contera a imagem gerada
 	char comentario[200], c; //auxiliares
@@ -412,9 +436,8 @@ int salvarPB()
 
 	//*** FIM DA GRAVACAO DA IMAGEM ***//
 }
-
-void clarearRGB()
-{
+//--------------------------------------------------------------------------------
+void clarearRGB(){
 	int valor, fator;
 	cout << endl;
 	cout << "Informe o fator de clareamento da imagem: " << endl;
@@ -429,17 +452,16 @@ void clarearRGB()
 			{
 				valor = (int)imagemC[i][j][k]; //pega o valor do pixel
 				valor += fator;				   //escurece o pixel
-				if (valor < 0)
-				{			   //se der negativo
-					valor = 0; //  deixa preto
+				if (valor > 255)
+				{			   //se der maior que 255
+					valor = 255; //  deixa branco
 				}
 				imagemC[i][j][k] = (unsigned char)valor; //modifica o pixel
 			}
 		}
 	}
 }
-void escurecerRGB()
-{
+void escurecerRGB(){
 	int valor, fator;
 	cout << endl;
 	cout << "Informe o fator de escurecimento da imagem: " << endl;
@@ -463,8 +485,7 @@ void escurecerRGB()
 		}
 	}
 }
-void negativoRGB()
-{
+void negativoRGB(){
 	int valor;
 	for (int i = 0; i < altura; i++)
 	{
@@ -479,8 +500,7 @@ void negativoRGB()
 		}
 	}
 }
-void espelhoRGB()
-{
+void espelhoRGB(){
 	int valor;
 	for (int i = 0; i < altura; i++)
 	{
@@ -496,7 +516,7 @@ void espelhoRGB()
 		}
 	}
 }
-/* void sobelRGB(){
+void sobelRGB(){
 	int matriz[3][3] = {1,2,1,0,0,0,-1,-2,-1};
 	int soma = 0;
 	for (int i = 0; i < altura; i++) {
@@ -516,6 +536,7 @@ void espelhoRGB()
 			soma = 0;
 		}
 	}
+
 	int matriz2[3][3] = {1,0,-1,2,0,-2,1,0,-1};
 	for (int i = 0; i < altura; i++) {
 		for (int j = 0; j < largura; j++){
@@ -541,7 +562,7 @@ void espelhoRGB()
 	for (int i = 0; i < altura; i++) 
 		for (int j = 0; j < largura; j++)
 			imagem[i][j] = novaImagem[i][j];
-}*/
+}
 int salvarRGB(){
 	ofstream arqsaida;		 //arquivo que contera a imagem gerada
 	char comentario[200], c; //auxiliares
