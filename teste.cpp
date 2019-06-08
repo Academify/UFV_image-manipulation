@@ -9,7 +9,7 @@ using namespace std;
 const int MAXALTURA = 500;
 const int MAXLARGURA = 500;
 unsigned char novaImagem[MAXALTURA][MAXLARGURA];
-unsigned char imagemC[MAXALTURA][MAXLARGURA][3];
+unsigned char imagemColorida[MAXALTURA][MAXLARGURA][3];
 unsigned char imagem[MAXALTURA][MAXLARGURA]; //a imagem propriamente dita
 char tipo[4];								 //tipo da imagem
 int largura, altura;						 //dimensoes da imagem
@@ -450,13 +450,13 @@ void clarearRGB(){
 		{
 			for (int k = 0; k < 3; k++)
 			{
-				valor = (int)imagemC[i][j][k]; //pega o valor do pixel
+				valor = (int)imagemColorida[i][j][k]; //pega o valor do pixel
 				valor += fator;				   //escurece o pixel
 				if (valor > 255)
 				{			   //se der maior que 255
 					valor = 255; //  deixa branco
 				}
-				imagemC[i][j][k] = (unsigned char)valor; //modifica o pixel
+				imagemColorida[i][j][k] = (unsigned char)valor; //modifica o pixel
 			}
 		}
 	}
@@ -474,13 +474,13 @@ void escurecerRGB(){
 		{
 			for (int k = 0; k < 3; k++)
 			{
-				valor = (int)imagemC[i][j][k]; //pega o valor do pixel
+				valor = (int)imagemColorida[i][j][k]; //pega o valor do pixel
 				valor -= fator;				   //escurece o pixel
 				if (valor < 0)
 				{			   //se der negativo
 					valor = 0; //  deixa preto
 				}
-				imagemC[i][j][k] = (unsigned char)valor; //modifica o pixel
+				imagemColorida[i][j][k] = (unsigned char)valor; //modifica o pixel
 			}
 		}
 	}
@@ -493,9 +493,9 @@ void negativoRGB(){
 		{
 			for (int k = 0; k < 3; k++)
 			{
-				valor = (int)imagemC[i][j][k];
+				valor = (int)imagemColorida[i][j][k];
 				valor = 255 - valor;
-				imagemC[i][j][k] = (unsigned char)valor;
+				imagemColorida[i][j][k] = (unsigned char)valor;
 			}
 		}
 	}
@@ -508,10 +508,10 @@ void espelhoRGB(){
 		{
 			for (int k = 0; k < 3; k++)
 			{
-				valor = (int)imagemC[i][j][k];
-				int aux = (int)imagemC[i][j][largura - 1 - k];
-				imagemC[i][j][largura - 1 - k] = (unsigned char)valor;
-				imagemC[i][j][k] = (unsigned char)aux;
+				valor = (int)imagemColorida[i][j][k];
+				int aux = (int)imagemColorida[i][j][largura - 1 - k];
+				imagemColorida[i][j][largura - 1 - k] = (unsigned char)valor;
+				imagemColorida[i][j][k] = (unsigned char)aux;
 			}
 		}
 	}
@@ -593,7 +593,7 @@ int salvarRGB(){
 	for (int i = 0; i < altura; i++)
 		for (int j = 0; j < largura; j++)
 			for(int k=0; k<3; k++)
-				arqsaida << (int)imagemC[i][j][k] << endl; //pixels
+				arqsaida << (int)imagemColorida[i][j][k] << endl; //pixels
 
 	arqsaida.close(); //fecha o arquivo
 					  //***************************//
